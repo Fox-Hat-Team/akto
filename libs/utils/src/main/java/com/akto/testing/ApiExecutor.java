@@ -428,16 +428,18 @@ public class ApiExecutor {
             String queryParams = (String) sctx.getAttribute("queryParams");
 
             Map<String, List<String>> hs = new HashMap<>();
-            for (String key: headers.keySet()) {
+            for (String key : headers.keySet()) {
                 try {
-                    ScriptObjectMirror scm = ((ScriptObjectMirror) headers.get(key));
+                    List<?> values = (List<?>) headers.get(key); // Replace with appropriate type
                     List<String> val = new ArrayList<>();
-                    for (int i = 0; i < scm.size(); i++) {
-                        val.add((String) scm.get(Integer.toString(i)));
+                    for (Object obj : values) {
+                        val.add(obj.toString()); // Convert each entry to String, if needed
                     }
+
                     hs.put(key, val);
                 } catch (Exception e) {
-                    hs.put(key, (List) headers.get(key));
+                    // If casting fails, assume headers.get(key) is already a List<String>
+                    hs.put(key, (List<String>) headers.get(key));
                 }
             }
 
